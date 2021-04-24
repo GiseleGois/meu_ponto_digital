@@ -1,58 +1,114 @@
-import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, ScrollView } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 
-export default function Perfil() {
+export default class App extends Component {
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ alignSelf: "center" }}>
-          <View style={styles.profileImage}>
-            <Image source={require("../assets/QRcode.png")} style={styles.image} resizeMode="center"></Image>
+  constructor() {
+    super();
+
+    this.state = { currentTime: null, currentDay: null }
+    this.daysArray = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado', 'Domingo'];
+  }
+
+  componentWillMount() {
+    this.getCurrentTime();
+  }
+
+  getCurrentTime = () => {
+    let hour = new Date().getHours();
+    let minutes = new Date().getMinutes();
+    let seconds = new Date().getSeconds();
+    let am_pm = 'pm';
+
+    if (minutes < 10) {
+      minutes = '0' + minutes;
+    }
+
+    if (seconds < 10) {
+      seconds = '0' + seconds;
+    }
+
+    if (hour > 12) {
+      hour = hour - 12;
+    }
+
+    if (hour == 0) {
+      hour = 12;
+    }
+
+    if (new Date().getHours() < 12) {
+      am_pm = 'am';
+    }
+
+    this.setState({ currentTime: hour + ':' + minutes + ':' + seconds + ' ' + am_pm });
+
+    this.daysArray.map((item, key) => {
+      if (key == new Date().getDay()) {
+        this.setState({ currentDay: item.toUpperCase() });
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      this.getCurrentTime();
+    }, 1000);
+  }
+
+  render() {
+
+    return (
+      <SafeAreaView style={styles.container}>
+
+          <View>
+            <Text style={styles.daysText}>{this.state.currentDay}</Text>
+            <Text style={styles.timeText}>{this.state.currentTime}</Text>
           </View>
-        </View>
+          
+          <View style={styles.captureTime}>
+            <TouchableOpacity style={styles.button} onPress={() => Alert.alert('Ponto batido')}>
+              <FontAwesome name="clock-o" size={30} color="#FFF" />
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.infoContainer}>
-          <Text style={styles.text}>Para iniciar</Text>
-          <Text style={styles.subText}>Faça o scan do QRCode com a camera !</Text>
-        </View>
-
-      </ScrollView>
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    );
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#caf7e3'
-  },
-  text: {
-    color: '#536162',
-    fontWeight: "200",
-    fontSize: 36
-  },
-  image: {
-    flex: 1,
-    height: 300,
-    width: 300,
-    borderRadius: 50,
-  },
-  subText: {
-    color: "#536162",
-    fontSize: 14
-  },
-  profileImage: {
-    width: 300,
-    height: 300,
-    marginTop: 50,
-  },
-  infoContainer: {
-    alignSelf: "center",
-    alignItems: "center",
-    marginTop: 16
-  },
+const styles = StyleSheet.create(
+  {
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#caf7e3'
+    },
+    timeText: {
+      fontSize: 60,
+      color: '#536162'
+    },
+    daysText: {
+      color: '#FFAAA7',
+      fontSize: 30,
+      paddingBottom: 0
+    },
+    captureTime: {
+      justifyContent: 'center',
+      width: '90%',
+    },
+    button: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#ffaaa7',
+      margin: 20,
+      borderRadius: 10,
+      height: 50,
+    },
 
-
-});
+  });

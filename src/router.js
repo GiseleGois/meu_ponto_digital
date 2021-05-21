@@ -6,12 +6,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import { Ionicons } from '@expo/vector-icons';
 
-import OnboardingScreen from './components/Onboarding';
+import OnboardingScreen from './pages/Onboarding';
 import LoginScreen from './pages/Login';
 import HomeScreen from './pages/Home';
-import PerfilScreen from './pages/Perfil';
 import HistoryScreen from './pages/History';
-import CameraScreen from './pages/Camera';
+import ScannerScreen from './pages/Scanner';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -37,10 +37,10 @@ function Tabs() {
         }}
       />
       <Tab.Screen
-        name="Camera"
-        component={CameraScreen}
+        name="Scan"
+        component={ScannerScreen}
         options={{
-          tabBarLabel: 'Camera',
+          tabBarLabel: 'Scan',
           tabBarIcon: ({ color }) => (
             <Ionicons name="camera-outline" color={"#536162"} size={25} />
           ),
@@ -53,16 +53,6 @@ function Tabs() {
           tabBarLabel: 'History',
           tabBarIcon: ({ color }) => (
             <Ionicons name="list-outline" color={"#536162"} size={25} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Perfil"
-        component={PerfilScreen}
-        options={{
-          tabBarLabel: 'Perfil',
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="person-outline" color={"#536162"} size={25} />
           ),
         }}
       />
@@ -101,18 +91,13 @@ function StackScreen() {
           options={{ title: '' }}
         />
         <Stack.Screen
-          name="Camera"
-          component={CameraScreen}
+          name="Scan"
+          component={ScannerScreen}
           options={{ title: '' }}
         />
         <Stack.Screen
           name="History"
           component={HistoryScreen}
-          options={{ title: '' }}
-        />
-        <Stack.Screen
-          name="Perfil"
-          component={PerfilScreen}
           options={{ title: '' }}
         />
       </Stack.Navigator>
